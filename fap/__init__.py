@@ -48,18 +48,31 @@ async def setup():
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
         if re.match(VALID_URL_REGEX, plugin_url) is None:
-            raise ValueError(f'Entry in plugins.yml "{plugin_url}" is not a valid git clone/repository url.')
+            raise ValueError(
+                f'Entry in plugins.yml "{plugin_url}" is not a valid git clone/repository url.')
 
         plugin_root = os.path.join('plugins', plugin_root)
 
         if not os.path.isdir(plugin_root):
-            plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
+            # clone plugin repository to plugins directory
+            plugins_dir.clone(plugin_url)
         else:
             res = git.Git(plugin_root).pull()  # update plugin repository
 
             if res != 'Already up to date.' and plugin_dir == 'fap':  # There was changes
-                self = importlib.import_module(os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.'))
+                self = importlib.import_module(
+                    os.path.normpath(
+                        os.path.join(
+                            plugin_root,
+                            plugin_dir)).replace(
+                        '/',
+                        '.'))
                 await self.setup()
                 return
 
-        loaded_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
+        loaded_plugins.append(
+            os.path.join(
+                plugin_root,
+                plugin_dir).replace(
+                '/',
+                '.'))
