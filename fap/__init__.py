@@ -44,7 +44,6 @@ def load_plugin_list():
 
 
 async def setup():
-    print('setting up')
     plugins_dir = git.Git('plugins')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
@@ -58,10 +57,7 @@ async def setup():
         else:
             res = git.Git(plugin_root).pull()  # update plugin repository
 
-            print(res)
-
             if res != 'Already up to date.' and plugin_dir == 'fap':  # There was changes
-                print('CHANGES')
                 self = importlib.import_module(os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.'))
                 await self.setup()
                 return
