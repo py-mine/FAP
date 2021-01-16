@@ -56,13 +56,11 @@ async def setup():
         if re.match(valid_url_regex, plugin_url) is None:
             raise ValueError(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
 
-        plugin_url = git.Git(plugin_url)
-        plugin_dir = git.Git(plugin_dir)
+        plugin_repo = git.Git(os.path.join(os.getcwd(), plugin_root))
 
         if not os.path.isdir(plugin_root):
-            plugin_url.clone()
+            plugin_repo.clone(plugin_url)
         elif os.path.isdir(plugin_root + os.sep + '.git'):
-            plugin_dir.pull()
+            plugin_repo.pull()
 
-        plugin_dirs.append(f'{plugin_root}{os.sep}{os.path.normpath(plugin_dir)}'.replace('/', '.'))
         plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
