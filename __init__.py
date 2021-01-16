@@ -79,3 +79,8 @@ async def setup():
     for plugin in unmanaged_plugins:
         if any([plugin in m_plugin for m_plugin in managed_plugins]):
             unmanaged_plugins.remove(plugin)
+
+    try:
+        unmanaged_plugins.remove('plugins.__pycache__')
+    except ValueError:
+        pass
