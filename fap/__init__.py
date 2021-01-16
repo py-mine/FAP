@@ -1,7 +1,7 @@
 import yaml
+import git
 import os
 import re
-import git
 
 valid_url_regex = re.compile(
     r'^(?:http)s?://'  # http:// or https://
