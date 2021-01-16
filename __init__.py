@@ -59,7 +59,7 @@ async def setup():
         else:
             res = git.Git(plugin_root).pull()  # update plugin repository
 
-            if res != 'Already up to date.' and plugin_root == 'FAP':  # There was changes
+            if res != 'Already up to date.' and os.path.normpath(plugin_root) == 'plugins/FAP':  # There was changes
                 self = importlib.import_module(os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.'))
                 await self.setup()
                 return
