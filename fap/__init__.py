@@ -57,3 +57,4 @@ async def setup():
             pass  # pull latest from repo
 
         plugin_dirs.append(f'{plugin_root}{os.sep}{os.path.normpath(plugin_dir)}'.replace('/', '.'))
+        plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
