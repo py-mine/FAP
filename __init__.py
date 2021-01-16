@@ -77,6 +77,5 @@ async def setup():
     unmanaged_plugins.extend([os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')])
 
     for plugin in unmanaged_plugins:
-        if not plugin.endswith('__'):
-            if any([plugin in m_plugin for m_plugin in managed_plugins]):
-                unmanaged_plugins.remove(plugin)
+        if plugin.endswith('__') or any([plugin in m_plugin for m_plugin in managed_plugins]):
+            unmanaged_plugins.remove(plugin)
