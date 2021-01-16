@@ -39,10 +39,13 @@ def load_plugin_list():
     return tuple(plugin_list)
 
 
-def setup():
+async def setup():
     plugin_dir = os.listdir('plugins')
 
     for plugin in load_plugin_list():
         if re.match(valid_url_regex, plugin) is None:
             logger.warn(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
             continue
+
+        if os.path.isdir('.git'):
+            pass  # pull latest from repo
