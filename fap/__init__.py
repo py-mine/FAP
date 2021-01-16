@@ -60,7 +60,7 @@ async def setup():
 
         if not os.path.isdir(plugin_root):
             plugin_repo.clone(plugin_url)
-        elif os.path.isdir(plugin_root + os.sep + '.git'):
+        elif os.path.isdir(os.path.join(plugin_root, '.git')):
             plugin_repo.pull()
 
         plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
