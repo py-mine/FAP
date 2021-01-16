@@ -1,3 +1,5 @@
+import importlib
+import shutil
 import yaml
 import git
 import os
@@ -51,16 +53,25 @@ async def setup():
         plugin_dir.remove('fap')
     except ValueError:
         pass
+    else:
+        fap_dir = os.path.join('plugins', 'FAP')
+        fap_repo = git.Git(fap_dir)
+
+        if os.path.isdir(os.path.join(fap_dir, '.git')):
+            fap_repo.pull()
+        else:
+            shutil.rmtree(fap_dir)
+            fap_repo.clone('https://github.com/py-mine/FAP.git')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
         if re.match(valid_url_regex, plugin_url) is None:
             raise ValueError(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
 
-        plugin_repo = git.Git(os.path.join(os.getcwd(), plugin_root))
+        plugin_repo = git.Git(os.path.join('plugins', plugin_root))
 
         if not os.path.isdir(plugin_root):
             plugin_repo.clone(plugin_url)
-        elif os.path.isdir(os.path.join(plugin_root, '.git')):
+        elif os.path.isdir(os.path.join('plugins', plugin_root, '.git')):
             plugin_repo.pull()
 
         plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
