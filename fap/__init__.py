@@ -1,10 +1,12 @@
 import yaml
 import os
 import re
+import git
 
 valid_url_regex = re.compile(
     r'^(?:http)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+    # domain...
+    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
     r'localhost|'  # localhost...
     r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
     r'(?::\d+)?'  # optional port
@@ -47,14 +49,16 @@ async def setup():
     plugin_dir.remove('fap')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
+
         if re.match(valid_url_regex, plugin_url) is None:
-            raise ValueError(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
+            raise ValueError(
+                f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
             continue
 
         if not os.path.isdir(plugin_root):
-            pass  # clone the repo
+            repo.clone(git.Git(plugin_url))
         elif os.path.isdir(plugin_root + os.sep + '.git'):
-            pass  # pull latest from repo
+            repo.pull(git.Git(plugin_dir))
 
         plugin_dirs.append(f'{plugin_root}{os.sep}{os.path.normpath(plugin_dir)}'.replace('/', '.'))
         plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
