@@ -44,6 +44,7 @@ def load_plugin_list():
 
 
 async def setup():
+    print('setup')
     plugins_dir = git.Git('plugins')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
@@ -52,10 +53,12 @@ async def setup():
 
         plugin_root = os.path.join('plugins', plugin_root)
 
-        if not os.path.isdir(plugin_root):
+        if not os.path.isdir(os.path.join(plugin_root, '.git')):
+            print('clone')
             shutil.rmtree(plugin_root)
             plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
         else:
+            print('pull')
             res = git.Git(plugin_root).pull()  # update plugin repository
 
             if res != 'Already up to date.' and plugin_root == 'FAP':  # There was changes
