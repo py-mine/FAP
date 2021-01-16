@@ -5,7 +5,7 @@ import git
 import os
 import re
 
-DEFAULT = [['https://github.com/py-mine/FAP.git', 'FAP', 'fap']]
+DEFAULT = [['https://github.com/py-mine/FAP.git', 'FAP', '']]
 VALID_URL_REGEX = re.compile(
     r'^(?:http)s?://'  # http:// or https://
     # domain...
@@ -57,7 +57,7 @@ async def setup():
         else:
             res = git.Git(plugin_root).pull()  # update plugin repository
 
-            if res != 'Already up to date.' and plugin_dir == 'fap':  # There was changes
+            if res != 'Already up to date.' and plugin_root == 'FAP':  # There was changes
                 self = importlib.import_module(os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.'))
                 await self.setup()
                 return
