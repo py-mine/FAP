@@ -3,24 +3,28 @@ import yaml
 import os
 import re
 
+
+def dump_default():
+    default = [('https://github.com/py-mine/FAP.git', 'fap')]
+
+    with open('plugins.yml', 'w+') as f:
+        f.write(yaml.dump([('https://github.com/py-mine/FAP.git', 'fap')]))
+
+    return default
+
+
 def load_plugin_list():
     try:
         with open('plugins.yml', 'r') as f:
             plugin_list = yaml.safe_load(f.read())
     except FileNotFoundError:
-        plugin_list = ['FAP']
-
-        with open('plugins.yml', 'w+') as f:
-            f.write(yaml.dump(plugin_list))
+        plugin_list = dump_default()
 
     if plugin_list is None:
         plugin_list = []
 
     if not isinstance(plugin_list, list):
-        with open('plugins.yml', 'w+') as f:
-            f.write(yaml.dump(['example']))
-
-        plugin_list = []
+        plugin_list = dump_default()
 
     return tuple(plugin_list)
 
