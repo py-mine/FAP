@@ -40,7 +40,7 @@ def load_plugin_list():
     if not isinstance(plugin_list, list):
         plugin_list = dump_default()
 
-    return tuple(plugin_list)
+    return plugin_list
 
 
 async def setup():
