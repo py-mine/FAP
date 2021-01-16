@@ -44,7 +44,6 @@ def load_plugin_list():
 
 
 async def setup():
-    print('test3')
     plugins_dir = git.Git('plugins')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
