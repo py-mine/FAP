@@ -44,7 +44,7 @@ def load_plugin_list():
     return plugin_list
 
 
-async def setup():
+async def setup(logger):
     plugins_dir = git.Git('plugins')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
@@ -59,9 +59,11 @@ async def setup():
             except FileNotFoundError:
                 pass
 
+            logger.debug(f'Cloning repository for plugin {plugin_url} to plugins folder...')
             plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
         else:
             try:  # try to pull, if error just delete repo and re-clone
+                logger.debug(f'Pulling latest changes for plugin {plugin_url}')
                 res = git.Git(plugin_root).pull()  # update plugin repository
             except BaseException:
                 try:
@@ -69,10 +71,12 @@ async def setup():
                 except FileNotFoundError:
                     pass
 
+                logger.debug(f'Cloning repository for plugin {plugin_url} to plugins folder...')
                 plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
                 continue
 
             if res != 'Already up to date.' and os.path.normpath(plugin_root) == 'plugins/FAP':  # there were changes
+                logger.debug('Updating FAP...')
                 self_path = os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.')
 
                 self = importlib.import_module(self_path)
