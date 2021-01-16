@@ -53,7 +53,11 @@ async def setup():
         plugin_root = os.path.join('plugins', plugin_root)
 
         if not os.path.isdir(os.path.join(plugin_root, '.git')):
-            shutil.rmtree(plugin_root)
+            try:
+                shutil.rmtree(plugin_root)
+            except FileNotFoundError:
+                pass
+
             plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
         else:
             res = git.Git(plugin_root).pull()  # update plugin repository
