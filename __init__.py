@@ -74,7 +74,7 @@ async def setup():
 
         managed_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
 
-    unmanaged_plugins += os.listdir('plugins')
+    unmanaged_plugins += [os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')]
 
     for plugin in unmanaged_plugins:
         if any([plugin in m_plugin for m_plugin in managed_plugins]):
