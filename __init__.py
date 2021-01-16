@@ -60,8 +60,13 @@ async def setup():
             res = git.Git(plugin_root).pull()  # update plugin repository
 
             if res != 'Already up to date.' and os.path.normpath(plugin_root) == 'plugins/FAP':  # There was changes
-                self = importlib.reload_module(os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.'))
+                self_path = os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.')
+
+                importlib.reload(self_path)
+                self = importlib.import_module(self_path)
+
                 await self.setup()
+                
                 return
 
         loaded_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
