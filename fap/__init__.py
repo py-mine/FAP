@@ -15,7 +15,7 @@ valid_url_regex = re.compile(
 
 
 def dump_default():
-    default = [('https://github.com/py-mine/FAP.git', 'fap')]
+    default = [('https://github.com/py-mine/FAP.git', 'FAP', 'fap')]
 
     with open('plugins.yml', 'w+') as f:
         f.write(yaml.dump(default))
@@ -42,10 +42,12 @@ def load_plugin_list():
 async def setup():
     plugin_dir = os.listdir('plugins')
 
-    for plugin in load_plugin_list():
-        if re.match(valid_url_regex, plugin) is None:
-            logger.warn(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
+    for plugin_url, plugin_root, plugin_dir in load_plugin_list():
+        if re.match(valid_url_regex, plugin_url) is None:
+            raise ValueError(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
             continue
 
-        if os.path.isdir('.git'):
+        if not os.path.isdir(plugin_root):
+            pass  # clone the repo
+        elif os.path.isdir(plugin_root + os.sep + '.git'):
             pass  # pull latest from repo
