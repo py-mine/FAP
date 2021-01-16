@@ -20,7 +20,7 @@ loaded_plugins = []
 
 
 def dump_default():
-    default = [('https://github.com/py-mine/FAP.git', 'FAP', 'fap')]
+    default = [['https://github.com/py-mine/FAP.git', 'FAP', 'fap']]
 
     with open('plugins.yml', 'w+') as f:
         f.write(yaml.dump(default))
