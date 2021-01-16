@@ -1,1 +1,15 @@
+plugins.yml
+
+plugins
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Sphinx documentation
+docs/_build/
+
+# Sh-wayz's shit
+/tags
+.tmuxinator.yml
