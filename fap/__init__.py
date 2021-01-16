@@ -16,7 +16,7 @@ valid_url_regex = re.compile(
     re.IGNORECASE
 )
 
-plugin_dirs = []
+loaded_plugins = []
 
 
 def dump_default():
@@ -45,23 +45,14 @@ def load_plugin_list():
 
 
 async def setup():
-    plugin_dir = os.listdir('plugins')
+    plugin_dir = git.Git('plugins')
 
     # Update self!
-
+    fap_dir = git.Git(os.path.join('plugins', 'FAP'))
     try:
-        plugin_dir.remove('fap')
-    except ValueError:
-        pass
-    else:
-        fap_dir = os.path.join('plugins', 'FAP')
-        fap_repo = git.Git(fap_dir)
-
-        if os.path.isdir(os.path.join(fap_dir, '.git')):
-            fap_repo.pull()
-        else:
-            shutil.rmtree(fap_dir)
-            fap_repo.clone('https://github.com/py-mine/FAP.git')
+        fap_dir.pull()
+    except BaseException as e:
+        plugin_dir.clone('https://github.com/py-mine/FAP.git')
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
         if re.match(valid_url_regex, plugin_url) is None:
@@ -74,4 +65,4 @@ async def setup():
         elif os.path.isdir(os.path.join('plugins', plugin_root, '.git')):
             plugin_repo.pull()
 
-        plugin_dirs.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
+        loaded_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
