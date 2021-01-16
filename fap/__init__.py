@@ -1,4 +1,3 @@
-import importlib
 import yaml
 import os
 import re
@@ -12,6 +11,8 @@ valid_url_regex = re.compile(
     r'(?:/?|[/?]\S+)$',
     re.IGNORECASE
 )
+
+plugin_dirs = []
 
 
 def dump_default():
