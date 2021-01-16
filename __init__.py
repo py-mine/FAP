@@ -59,11 +59,11 @@ async def setup(logger):
             except FileNotFoundError:
                 pass
 
-            logger.debug(f'Cloning repository for plugin {plugin_url} to plugins folder...')
+            logger.debug(f'Cloning {plugin_url} to plugins folder...')
             plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
         else:
             try:  # try to pull, if error just delete repo and re-clone
-                logger.debug(f'Pulling latest changes for plugin {plugin_url}')
+                logger.debug(f'Pulling latest from {plugin_url}')
                 res = git.Git(plugin_root).pull()  # update plugin repository
             except BaseException:
                 try:
@@ -71,7 +71,7 @@ async def setup(logger):
                 except FileNotFoundError:
                     pass
 
-                logger.debug(f'Cloning repository for plugin {plugin_url} to plugins folder...')
+                logger.debug(f'Cloning {plugin_url} to plugins folder...')
                 plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
                 continue
 
