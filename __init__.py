@@ -61,9 +61,18 @@ async def setup():
 
             plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
         else:
-            res = git.Git(plugin_root).pull()  # update plugin repository
+            try:  # try to pull, if error just delete repo and re-clone
+                res = git.Git(plugin_root).pull()  # update plugin repository
+            except BaseException:
+                try:
+                    shutil.rmtree(plugin_root)
+                except FileNotFoundError:
+                    pass
 
-            if res != 'Already up to date.' and os.path.normpath(plugin_root) == 'plugins/FAP':  # There was changes
+                plugins_dir.clone(plugin_url)  # clone plugin repository to plugins directory
+                continue
+
+            if res != 'Already up to date.' and os.path.normpath(plugin_root) == 'plugins/FAP':  # there were changes
                 self_path = os.path.normpath(os.path.join(plugin_root, plugin_dir)).replace('/', '.')
 
                 self = importlib.import_module(self_path)
@@ -74,6 +83,7 @@ async def setup():
 
         managed_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
 
+    # used by PyMine to load other plugins
     unmanaged_plugins.extend([os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')])
 
     for plugin in unmanaged_plugins:
