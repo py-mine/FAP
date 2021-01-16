@@ -52,3 +52,5 @@ async def setup():
             pass  # clone the repo
         elif os.path.isdir(plugin_root + os.sep + '.git'):
             pass  # pull latest from repo
+
+        plugin_dirs.append(f'{plugin_root}{os.sep}{os.path.normpath(plugin_dir)}'.replace('/', '.'))
