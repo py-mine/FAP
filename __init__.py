@@ -17,7 +17,7 @@ VALID_URL_REGEX = re.compile(
     re.IGNORECASE
 )
 
-loaded_plugins = []
+managed_plugins = []
 
 
 def dump_default():
@@ -71,4 +71,4 @@ async def setup():
                 await self.setup()
                 return
 
-        loaded_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
+        managed_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
