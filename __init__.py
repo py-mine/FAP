@@ -82,7 +82,7 @@ async def setup(logger):
                 self = importlib.import_module(self_path)
                 importlib.reload(self)
 
-                await self.setup()
+                await self.setup(logger)
                 return
 
         managed_plugins.append(os.path.join(plugin_root, plugin_dir).replace('/', '.'))
