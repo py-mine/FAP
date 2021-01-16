@@ -77,6 +77,5 @@ async def setup():
     unmanaged_plugins.extend([os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')])
 
     for plugin in unmanaged_plugins:
-        if '__pycache__' in plugin or any([plugin in m_plugin for m_plugin in managed_plugins]):
-            print(plugin)
+        if any([plugin in m_plugin for m_plugin in managed_plugins]) or '__pycache__' in plugin:
             unmanaged_plugins.remove(plugin)
