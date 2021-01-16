@@ -46,7 +46,11 @@ async def setup():
     plugin_dir = os.listdir('plugins')
 
     # Update self!
-    plugin_dir.remove('fap')
+
+    try:
+        plugin_dir.remove('fap')
+    except ValueError:
+        pass
 
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
         if re.match(valid_url_regex, plugin_url) is None:
