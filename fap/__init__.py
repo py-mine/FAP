@@ -62,7 +62,7 @@ async def setup():
 
             if res != 'Already up to date.' and plugin_dir == 'fap':  # There was changes
                 print('CHANGES')
-                self = importlib.import_module(os.path.normpath(plugin_root).replace('/', '.'))
+                self = importlib.import_module(os.path.normpath(plugin_root).replace('/', '.')).fap
                 await self.setup()
                 return
 
