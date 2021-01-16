@@ -46,12 +46,6 @@ def load_plugin_list():
 async def setup():
     plugins_dir = git.Git('plugins')
 
-    # Update self!
-    try:
-        git.Git(os.path.join('plugins', 'FAP')).pull()  # update self
-    except BaseException as e:
-        plugins_dir.clone('https://github.com/py-mine/FAP.git')  # clone self to plugins directory
-
     for plugin_url, plugin_root, plugin_dir in load_plugin_list():
         if re.match(VALID_URL_REGEX, plugin_url) is None:
             raise ValueError(f'Entry in plugins.yml "{plugin}" is not a valid git clone/repository url.')
