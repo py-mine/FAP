@@ -116,16 +116,16 @@ async def setup(logger):
         plugins.append(module_path.replace('/', '.'))
 
     # used by PyMine to load other plugins
-    unmanaged_plugins = [os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')]
+    folder_plugins = [os.path.join('plugins', p).replace(os.sep, '.') for p in os.listdir('plugins')]
 
-    for plugin in unmanaged_plugins:
-        if any([plugin in m_plugin for m_plugin in plugins]):
-            unmanaged_plugins.remove(plugin)
+    plugins_nice = list(set(plugins + folder_plugins))  # remove duplicates
 
-    for to_remove in ('plugins.__pycache__', 'plugins.FAP',):
+    for to_remove in ('plugins.__pycache__', 'plugins.FAP',):  # remove plugins which shouldn't be loaded again
         try:
-            unmanaged_plugins.remove(to_remove)
+            plugins_nice.remove(to_remove)
         except ValueError:
             pass
 
-    plugins.extend(unmanaged_plugins)
+    # update official list
+    plugins.clear()
+    plugins.extend(plugins_nice)
