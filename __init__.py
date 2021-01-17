@@ -24,8 +24,7 @@ VALID_URL_REGEX = re.compile(
     re.IGNORECASE
 )
 
-managed_plugins = []
-unmanaged_plugins = []
+plugins = []
 
 
 def dump_default():
@@ -112,13 +111,13 @@ async def setup(logger):
             if res != 'Already up to date.' and root_folder == 'plugins/FAP':  # there were changes
                 return await reload_self(logger, root_folder, module_folder)
 
-        managed_plugins.append(os.path.join(root_folder, module_folder).replace('/', '.'))
+        plugins.append(os.path.join(root_folder, module_folder).replace('/', '.'))
 
     # used by PyMine to load other plugins
-    unmanaged_plugins.extend([os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')])
+    unmanaged_plugins = [os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')]
 
     for plugin in unmanaged_plugins:
-        if any([plugin in m_plugin for m_plugin in managed_plugins]):
+        if any([plugin in m_plugin for m_plugin in plugins]):
             unmanaged_plugins.remove(plugin)
 
     for to_remove in ('plugins.__pycache__', 'plugins.FAP',):
@@ -126,3 +125,5 @@ async def setup(logger):
             unmanaged_plugins.remove(to_remove)
         except ValueError:
             pass
+
+    plugins.extend(unmanaged_plugins)
