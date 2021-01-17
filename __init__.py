@@ -71,10 +71,7 @@ async def setup(logger):
             logger.warn(f'Entry {index} in plugins.yml isn\'t formatted correctly, skipping entry...')
             continue
 
-        module_folder = plugin_entry.get('module_folder', '')
-
-        if module_folder is None:
-            module_folder = ''
+        module_folder = plugin_entry.get('module_folder')
 
         if re.match(VALID_URL_REGEX, clone_url) is None:
             logger.warn(f'Entry in plugins.yml "{clone_url}" is not a valid git clone/repository url, skipping...')
@@ -111,7 +108,12 @@ async def setup(logger):
             if res != 'Already up to date.' and root_folder == 'plugins/FAP':  # there were changes
                 return await reload_self(logger, root_folder, module_folder)
 
-        plugins.append(os.path.join(root_folder, module_folder).replace('/', '.'))
+        module_path = root_folder
+
+        if module_folder:
+            module_path = os.path.join(module_path, module_folder)
+
+        plugins.append(module_path.replace('/', '.'))
 
     # used by PyMine to load other plugins
     unmanaged_plugins = [os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')]
