@@ -104,7 +104,7 @@ async def setup(logger):
             git_url = plugin_entry['git_url']
             root_folder = plugin_entry['root_folder']
         except KeyError:
-            logger.warn(f'Entry {index} in plugins.yml isn\'t formatted correctly, skipping...')
+            logger.warn(f'Entry {index + 1} in plugins.yml isn\'t formatted correctly, skipping...')
             continue
 
         module_folder = plugin_entry.get('module_folder')
