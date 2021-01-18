@@ -84,6 +84,7 @@ async def pull_latest(logger, plugins_dir, git_url, root_folder):
     except BaseException:
         logger.warn(f'Failed to pull from {git_url}, attempting to clone...')
         await clone_repo(plugins_dir, git_url, root_folder)
+        res = True
 
     did_update = (res != 'Already up to date.')
 
