@@ -77,16 +77,20 @@ async def clone_repo(logger, plugins_dir, git_url, root_folder):
 
 
 async def pull_latest(logger, plugins_dir, git_url, root_folder):
-    logger.debug(f'Pulling latest from {git_url}...')
+    logger.debug(f'Pulling from {git_url}...')
 
     try:
         res = git.Git(root_folder).pull()  # pull latest from remote
     except BaseException:
         logger.warn(f'Failed to pull from {git_url}, attempting to clone...')
-        return await clone_repo(plugins_dir, git_url, root_folder)
+        await clone_repo(plugins_dir, git_url, root_folder)
 
-    if root_folder == 'plugins/FAP' and res != 'Already up to date.':
+    did_update = (res != 'Already up to date.')
+
+    if root_folder == 'plugins/FAP' and did_update:
         await update_self(logger, root_folder)
+
+    return did_update
 
 
 async def setup(logger):
@@ -113,15 +117,16 @@ async def setup(logger):
 
         root_folder = os.path.normpath(os.path.join('plugins', root_folder))
 
-        logger.info(f'Updating {plugin_name}...')
+        logger.info(f'Checking for updates for {plugin_name}...')
 
         try:
-            if not os.path.isdir(os.path.join(root_folder, '.git')):  # If already a git repository
-                await clone_repo(logger, plugins_dir, git_url, root_folder)
-            else:
-                await pull_latest(logger, plugins_dir, git_url, root_folder)
+            did_update = await pull_latest(logger, plugins_dir, git_url, root_folder)
         except BaseException as e:
             logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
+            continue
+
+        if did_update:
+            logger.info(f'Updated {plugin_name}!')
 
         module_path = root_folder
 
