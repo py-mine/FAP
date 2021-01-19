@@ -103,6 +103,8 @@ async def setup(logger):
     plugins_dir = git.Git('plugins')
 
     for index, plugin_entry in enumerate(load_plugin_list()):
+        print(index, plugin_entry)
+        
         try:
             git_url = plugin_entry['git_url']
             plugin_name = root_folder = plugin_entry['root_folder']
