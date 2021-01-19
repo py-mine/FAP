@@ -56,6 +56,8 @@ def load_plugin_list():
 
 
 async def update_self(logger, root_folder):
+    logger.info('Updated FAP!')
+    
     self = importlib.import_module(root_folder.replace(os.sep, '.'))
     importlib.reload(self)
 
@@ -93,8 +95,7 @@ async def get_latest(logger, plugins_dir, git_url, root_folder):
     did_update = (res != 'Already up to date.')
 
     if root_folder == 'plugins/FAP' and did_update:
-        await update_self(logger, root_folder)
-        return
+        return await update_self(logger, root_folder)
 
     return did_update
 
@@ -131,10 +132,7 @@ async def setup(logger):
             logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
             continue
 
-        print(did_update)
-
         if did_update is None:
-            logger.info(f'Updated {plugin_name}!')
             return
         elif did_update:
             logger.info(f'Updated {plugin_name}!')
