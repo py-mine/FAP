@@ -130,9 +130,8 @@ async def setup(logger):
             logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
             continue
 
-        print(did_update, plugin_name)
-
         if did_update is None:
+            logger.info(f'Updated {plugin_name}!')
             return
         elif did_update:
             logger.info(f'Updated {plugin_name}!')
