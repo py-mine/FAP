@@ -104,7 +104,7 @@ async def setup(logger):
 
     for index, plugin_entry in enumerate(load_plugin_list()):
         print(index, plugin_entry)
-        
+
         try:
             git_url = plugin_entry['git_url']
             plugin_name = root_folder = plugin_entry['root_folder']
@@ -128,7 +128,9 @@ async def setup(logger):
             logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
             continue
 
-        if did_update:
+        if did_update is None:
+            return
+        elif did_update:
             logger.info(f'Updated {plugin_name}!')
         else:
             logger.info(f'No updates found for {plugin_name}.')
