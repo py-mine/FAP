@@ -18,7 +18,7 @@ DEFAULT = [
     }
 ]
 
-VALID_git_url_REGEX = re.compile(
+VALID_URL_REGEX = re.compile(
     r'^(?:http)s?://'  # http:// or https://
     # domain...
     r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
@@ -118,7 +118,7 @@ async def setup(logger):
 
         module_folder = plugin_entry.get('module_folder')
 
-        if re.match(VALID_git_url_REGEX, git_url) is None:
+        if re.match(VALID_URL_REGEX, git_url) is None:
             logger.warn(f'Entry in plugins.yml "{git_url}" is not a valid git URL, skipping...')
             continue
 
