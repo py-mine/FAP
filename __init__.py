@@ -57,7 +57,7 @@ def load_plugin_list():
 
 async def update_self(logger, root_folder):
     logger.info('Updated FAP!')
-    
+
     self = importlib.import_module(root_folder.replace(os.sep, '.'))
     importlib.reload(self)
 
