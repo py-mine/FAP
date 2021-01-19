@@ -134,7 +134,8 @@ async def setup(logger):
 
         if did_update is None:
             return
-        elif did_update:
+
+        if did_update:
             logger.info(f'Updated {plugin_name}!')
         else:
             logger.info(f'No updates found for {plugin_name}.')
