@@ -93,7 +93,8 @@ async def get_latest(logger, plugins_dir, git_url, root_folder):
     did_update = (res != 'Already up to date.')
 
     if root_folder == 'plugins/FAP' and did_update:
-        return await update_self(logger, root_folder)
+        await update_self(logger, root_folder)
+        return
 
     return did_update
 
