@@ -110,6 +110,10 @@ async def setup(logger):
     plugin_list = []
 
     for index, plugin_entry in enumerate(load_plugin_list()):
+        if not isinstance(plugin_entry, dict) or not all(isinstance(e, list) for e in plugin_entry.values()):
+            logger.error(f'The plugins.yml isn\'t formatted correctly.')
+            break
+
         try:
             git_url = plugin_entry['git_url']
             plugin_name = root_folder = plugin_entry['root_folder']
