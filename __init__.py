@@ -111,7 +111,7 @@ async def setup(logger):
     to_be_loaded = load_plugin_list()
 
     if not isinstance(to_be_loaded, list) or not all(isinstance(e, dict) for e in to_be_loaded):
-        logger.error(f'The plugins.yml isn\'t formatted correctly.')
+        logger.error(f'The plugins.yml isn\'t formatted correctly (delete file to reset).')
     else:
         for index, plugin_entry in enumerate(to_be_loaded):
             try:
