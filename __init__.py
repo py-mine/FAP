@@ -148,13 +148,13 @@ async def setup(logger):
             module_path = root_folder
 
             if module_folder:
-                module_path = os.path.join(module_path, module_folder)
+                module_path = os.path.normpath(os.path.join(module_path, module_folder))
 
-            plugin_list.append(module_path.replace(os.sep, '.'))
+            plugin_list.append(module_path.replace('/', '.'))
 
     # should be all managed plugins + plugins in the plugins folder, with no duplicates
     plugin_list = list(set(
-        plugin_list + [os.path.join('plugins', p).replace(os.sep, '.') for p in os.listdir('plugins')]
+        plugin_list + [os.path.normpath(os.path.join('plugins', p)).replace('/', '.') for p in os.listdir('plugins')]
     ))
 
     for to_remove in ('plugins.__pycache__', 'plugins.FAP',):  # remove plugins which shouldn't be loaded again / at all
