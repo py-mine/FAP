@@ -3,3 +3,5 @@
 <br><br>
 FAP - F*cking Awesome Plugins
 * Requires the `gitpython` package and Git itself to be installed!
+
+<!--test-->
