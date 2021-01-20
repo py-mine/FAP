@@ -148,9 +148,9 @@ async def setup(logger):
             module_path = root_folder
 
             if module_folder:
-                module_path = os.path.normpath(os.path.join(module_path, module_folder))
+                module_path = os.path.join(module_path, module_folder)
 
-            plugin_list.append(module_path.replace('/', '.'))
+            plugin_list.append(os.path.normpath(module_path).replace('/', '.'))
 
     # should be all managed plugins + plugins in the plugins folder, with no duplicates
     plugin_list = list(set(
