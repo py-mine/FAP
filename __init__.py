@@ -131,7 +131,7 @@ async def setup(logger):
                 logger.warn(f'In entry {index + 1}, "{git_url}" is not a valid git URL, skipping...')
                 continue
 
-            root_folder = dot_path(os.path.join('plugins', root_folder))
+            root_folder = os.path.join('plugins', root_folder)
 
             logger.info(f'Checking for updates for {plugin_name}...')
 
