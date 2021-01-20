@@ -108,49 +108,49 @@ async def setup(logger):
 
     plugins_dir = git.Git('plugins')
     plugin_list = []
+    to_be_loaded = load_plugin_list()
 
-    for index, plugin_entry in enumerate(load_plugin_list()):
-        if not isinstance(plugin_entry, dict) or not all(isinstance(e, list) for e in plugin_entry.values()):
-            logger.error(f'The plugins.yml isn\'t formatted correctly.')
-            break
+    if not isinstance(to_be_loaded, list) or not all(isinstance(e, dict) for e in to_be_loaded):
+        logger.error(f'The plugins.yml isn\'t formatted correctly.')
+    else:
+        for index, plugin_entry in enumerate(to_be_loaded):
+            try:
+                git_url = plugin_entry['git_url']
+                plugin_name = root_folder = plugin_entry['root_folder']
+            except KeyError:
+                logger.warn(f'Entry {index + 1} in plugins.yml isn\'t formatted correctly, skipping...')
+                continue
 
-        try:
-            git_url = plugin_entry['git_url']
-            plugin_name = root_folder = plugin_entry['root_folder']
-        except KeyError:
-            logger.warn(f'Entry {index + 1} in plugins.yml isn\'t formatted correctly, skipping...')
-            continue
+            module_folder = plugin_entry.get('module_folder')
 
-        module_folder = plugin_entry.get('module_folder')
+            if re.match(VALID_URL_REGEX, git_url) is None:
+                logger.warn(f'In entry {index + 1}, "{git_url}" is not a valid git URL, skipping...')
+                continue
 
-        if re.match(VALID_URL_REGEX, git_url) is None:
-            logger.warn(f'In entry {index + 1}, "{git_url}" is not a valid git URL, skipping...')
-            continue
+            root_folder = os.path.normpath(os.path.join('plugins', root_folder))
 
-        root_folder = os.path.normpath(os.path.join('plugins', root_folder))
+            logger.info(f'Checking for updates for {plugin_name}...')
 
-        logger.info(f'Checking for updates for {plugin_name}...')
+            try:
+                did_update = await get_latest(logger, plugins_dir, git_url, root_folder)
+            except BaseException as e:
+                logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
+                continue
 
-        try:
-            did_update = await get_latest(logger, plugins_dir, git_url, root_folder)
-        except BaseException as e:
-            logger.error(f'Failed to update plugin "{plugin_name}" due to: {logger.f_traceback(e)}')
-            continue
+            if did_update is None:
+                return
 
-        if did_update is None:
-            return
+            if did_update:
+                logger.info(f'Updated {plugin_name}!')
+            else:
+                logger.info(f'No updates found for {plugin_name}.')
 
-        if did_update:
-            logger.info(f'Updated {plugin_name}!')
-        else:
-            logger.info(f'No updates found for {plugin_name}.')
+            module_path = root_folder
 
-        module_path = root_folder
+            if module_folder:
+                module_path = os.path.join(module_path, module_folder)
 
-        if module_folder:
-            module_path = os.path.join(module_path, module_folder)
-
-        plugin_list.append(module_path.replace(os.sep, '.'))
+            plugin_list.append(module_path.replace(os.sep, '.'))
 
     # should be all managed plugins + plugins in the plugins folder, with no duplicates
     plugin_list = list(set(
