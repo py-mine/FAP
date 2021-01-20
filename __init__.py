@@ -160,4 +160,4 @@ async def setup(logger):
             pass
 
     # update official list
-    plugins.extend(plugins_nice)
+    plugins.extend(plugin_list)
