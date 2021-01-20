@@ -108,6 +108,8 @@ async def setup(logger):
 
     plugins_dir = git.Git('plugins')
 
+    plugin_list = []
+
     for index, plugin_entry in enumerate(load_plugin_list()):
         try:
             git_url = plugin_entry['git_url']
@@ -145,10 +147,10 @@ async def setup(logger):
         if module_folder:
             module_path = os.path.join(module_path, module_folder)
 
-        plugins.append(module_path.replace('/', '.'))
+        plugin_list.append(module_path.replace(os.sep, '.'))
 
     # used by PyMine to load other plugins
-    folder_plugins = [os.path.join('plugins', p).replace(os.sep, '.') for p in os.listdir('plugins')]
+    plugin_list += [os.path.join('plugins', p).replace(os.sep, '.') for p in os.listdir('plugins')]
 
     plugins_nice = list(set(plugins + folder_plugins))  # remove duplicates
 
